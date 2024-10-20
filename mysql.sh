@@ -44,9 +44,9 @@ Validate $? "Starting Mysql server"
 #Below code will be useful for idempotent nature
 mysql -h db.devops4srav.online -uroot -p${mysql_root_password} -e 'show databases;' &>>$LOGFILE
 
-if [ $? -eq 0 ]
+if [ $? -ne 0 ]
 then
-mysql_secure_installation --set-root-pass mysql_root_password &>>$LOGFILE
+mysql_secure_installation --set-root-pass ${mysql_root_password} &>>$LOGFILE
 Validate $? "Setting Mysql server root password"
 else
 echo -e "DB root password already set...$Y Skipping $N"
