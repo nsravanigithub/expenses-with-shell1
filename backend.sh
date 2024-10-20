@@ -53,3 +53,21 @@ unzip /tmp/backend.zip
 npm install
 
 cp /home/ec2-user/expenses-with-shell1/backend.service /etc/systemd/system/backend.service
+
+systemctl daemon-reload &>>$LOGFILE
+Validate $? "Daemon reloading"
+
+systemctl start backend &>>$LOGFILE
+Validate $? "Starting backend"
+
+systemctl enable backend &>>$LOGFILE
+Validate $? "Enabling backend"
+
+dnf install mysql -y &>>$LOGFILE
+Validate $? "Installing mysql"
+
+mysql -h db.devops4srav.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
+Validate $? "Loading Schema"
+
+systemctl restart backend &>>$LOGFILE
+Validate $? "Restarting backend"
