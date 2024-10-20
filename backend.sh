@@ -43,14 +43,14 @@ if [ $? -ne 0 ]
 then
 useradd expense
 else
-"User is already added"
+echo "User is already added"
 fi
 mkdir -p /app
 rm -rf /tmp/*
 curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
 cd /app
 unzip /tmp/backend.zip
-npm install
+npm install &>>$LOGFILE
 
 cp /home/ec2-user/expenses-with-shell1/backend.service /etc/systemd/system/backend.service
 
@@ -66,7 +66,7 @@ Validate $? "Enabling backend"
 dnf install mysql -y &>>$LOGFILE
 Validate $? "Installing mysql"
 
-mysql -h db.devops4srav.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
+mysql -h db.devops4srav.online -uroot -pExpenseApp@1 < /app/schema/backend.sql &>>$LOGFILE
 Validate $? "Loading Schema"
 
 systemctl restart backend &>>$LOGFILE
